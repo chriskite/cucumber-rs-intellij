@@ -1,0 +1,85 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
+    id 'org.jetbrains.intellij.platform' version '2.11.0'
+}
+
+group = 'com.chriskite.cucumber-rs'
+version = '0.0.0'
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
+}
+
+dependencies {
+    intellijPlatform {
+        // Target IntelliJ IDEA as the base platform
+        intellijIdea '2024.2.4'
+
+        // Automatically resolve compatible versions of the Gherkin and Cucumber plugins
+        compatiblePlugin 'gherkin'
+        compatiblePlugin 'cucumber-java'
+
+        pluginVerifier()
+    }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.4'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.11.4'
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        id = 'com.chriskite.cucumber-rs.intellij'
+        name = 'Cucumber for Rust'
+        version = project.version.toString()
+        description = '''
+            <p>Enables Cucumber BDD support for Rust projects using the <a href="https://github.com/cucumber-rs/cucumber">cucumber-rs</a> crate.</p>
+            <h3>Features</h3>
+            <ul>
+                <li>Navigation from Gherkin steps to Rust step definitions</li>
+                <li>Step definition detection from <code>#[given(...)]</code>, <code>#[when(...)]</code>, <code>#[then(...)]</code> macros</li>
+                <li>Quick-fix to create missing step definitions in Rust</li>
+                <li>Run configurations for cucumber-rs tests via <code>cargo test</code></li>
+                <li>Syntax highlighting for Gherkin .feature files (via Gherkin plugin)</li>
+                <li>Code completion for step patterns</li>
+                <li>Support for both Cucumber Expressions and regex patterns</li>
+            </ul>
+        '''.stripIndent()
+        changeNotes = '''
+            <h3>1.0.0</h3>
+            <ul>
+                <li>Initial release</li>
+                <li>Step definition navigation and creation</li>
+                <li>Run configuration support</li>
+            </ul>
+        '''.stripIndent()
+
+        ideaVersion {
+            sinceBuild = '242'
+        }
+
+        vendor {
+            name = 'chriskite'
+            url = 'https://github.com/chriskite/cucumber-rs-intellij'
+        }
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '21'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

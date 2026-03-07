@@ -1,0 +1,65 @@
+<idea-plugin>
+    <id>com.chriskite.cucumber-rs.intellij</id>
+    <name>Cucumber for Rust</name>
+    <vendor url="https://github.com/chriskite/cucumber-rs-intellij">cucumber-rs</vendor>
+
+    <description><![CDATA[
+    <p>Enables Cucumber BDD support for Rust projects using the
+    <a href="https://github.com/cucumber-rs/cucumber">cucumber-rs</a> crate.</p>
+
+    <h3>Features</h3>
+    <ul>
+        <li>Navigation from Gherkin steps to Rust step definitions (<code>#[given]</code>, <code>#[when]</code>, <code>#[then]</code>)</li>
+        <li>Step definition detection from cucumber-rs attribute macros</li>
+        <li>Quick-fix to create missing step definitions in Rust</li>
+        <li>Run configurations for cucumber-rs tests via <code>cargo test</code></li>
+        <li>Syntax highlighting for Gherkin .feature files (via Gherkin plugin)</li>
+        <li>Support for both Cucumber Expressions and regex patterns</li>
+        <li>Gherkin v6 Rule keyword support</li>
+    </ul>
+    ]]></description>
+
+    <!-- Require the IntelliJ platform -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <!-- Depend on the Gherkin plugin for .feature file support -->
+    <depends>gherkin</depends>
+
+    <!-- Depend on the Cucumber Java plugin for extension points -->
+    <depends>cucumber-java</depends>
+
+    <extensions defaultExtensionNs="org.jetbrains.plugins.cucumber">
+        <!-- Register our Rust cucumber extension point implementation -->
+        <steps.cucumberJvmExtensionPoint
+                implementation="com.chriskite.cucumber_rs.intellij.steps.RustCucumberExtension"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Register the run configuration type for cucumber-rs tests -->
+        <configurationType
+                implementation="com.chriskite.cucumber_rs.intellij.run.CucumberRustConfigurationType"/>
+
+        <!-- Run configuration producer to auto-create run configs from context -->
+        <runConfigurationProducer
+                implementation="com.chriskite.cucumber_rs.intellij.run.CucumberRustRunConfigurationProducer"/>
+
+        <!-- Register a run line marker provider for .feature files -->
+        <runLineMarkerContributor
+                language="Gherkin"
+                implementationClass="com.chriskite.cucumber_rs.intellij.run.CucumberRustRunLineMarkerContributor"/>
+
+        <!-- Notification group for the plugin -->
+        <notificationGroup id="Cucumber for Rust"
+                           displayType="BALLOON"/>
+    </extensions>
+
+    <actions>
+        <!-- Action to run cucumber-rs tests from the editor -->
+        <action id="CucumberRust.RunFeature"
+                class="com.chriskite.cucumber_rs.intellij.run.RunCucumberFeatureAction"
+                text="Run Cucumber Feature"
+                description="Run cucumber-rs tests for this feature file">
+            <add-to-group group-id="RunMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>
