@@ -50,7 +50,7 @@ intellijPlatform {
             </ul>
         '''.stripIndent()
         changeNotes = '''
-            <h3>1.0.0</h3>
+            <h3>0.0.0</h3>
             <ul>
                 <li>Initial release</li>
                 <li>Step definition navigation and creation</li>
