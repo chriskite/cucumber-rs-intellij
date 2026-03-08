@@ -29,7 +29,8 @@ import org.jetbrains.plugins.cucumber.steps.AbstractStepDefinition
  */
 class RustCucumberExtension : CucumberJvmExtensionPoint {
 
-    override fun isStepLikeFile(child: PsiElement, parent: PsiElement): Boolean {
+    // 1-arg versions for 2026.1+ (new abstract interface methods)
+    fun isStepLikeFile(child: PsiElement): Boolean {
         val file = child.containingFile?.virtualFile ?: return false
         if (!RustStepDefinitionUtil.isRustFile(file)) return false
 
@@ -38,10 +39,15 @@ class RustCucumberExtension : CucumberJvmExtensionPoint {
         return RustStepDefinitionUtil.containsStepDefinitions(text)
     }
 
-    override fun isWritableStepLikeFile(child: PsiElement, parent: PsiElement): Boolean {
+    fun isWritableStepLikeFile(child: PsiElement): Boolean {
         val file = child.containingFile?.virtualFile ?: return false
         return RustStepDefinitionUtil.isRustFile(file) && file.isWritable
     }
+
+    // 2-arg versions for 2025.3 and earlier (old abstract interface methods, deprecated in transitional builds)
+    override fun isStepLikeFile(child: PsiElement, parent: PsiElement): Boolean = isStepLikeFile(child)
+
+    override fun isWritableStepLikeFile(child: PsiElement, parent: PsiElement): Boolean = isWritableStepLikeFile(child)
 
     override fun getStepFileType(): BDDFrameworkType {
         // Use PlainTextFileType as a fallback since Rust file type may not be available
@@ -71,7 +77,8 @@ class RustCucumberExtension : CucumberJvmExtensionPoint {
         return FilenameIndex.getAllFilesByExt(project, CucumberRustBundle.RUST_FILE_EXTENSION, projectScope)
     }
 
-    override fun loadStepsFor(featureFile: PsiFile?, module: Module): List<AbstractStepDefinition> {
+    // 1-arg version for 2026.1+ (new abstract interface method)
+    fun loadStepsFor(module: Module): List<AbstractStepDefinition> {
         val stepDefinitions = mutableListOf<AbstractStepDefinition>()
         val project = module.project
         val psiManager = PsiManager.getInstance(project)
@@ -104,6 +111,9 @@ class RustCucumberExtension : CucumberJvmExtensionPoint {
 
         return stepDefinitions
     }
+
+    // 2-arg version for 2025.3 and earlier (old interface method, deprecated in transitional builds)
+    override fun loadStepsFor(featureFile: PsiFile?, module: Module): List<AbstractStepDefinition> = loadStepsFor(module)
 
     override fun getStepDefinitionContainers(file: GherkinFile): Collection<PsiFile> {
         val module = ModuleUtilCore.findModuleForFile(file)

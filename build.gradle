@@ -17,7 +17,7 @@ repositories {
 dependencies {
     intellijPlatform {
         // Target IntelliJ IDEA as the base platform
-        intellijIdea '2024.2.4'
+        intellijIdeaUltimate '2025.3.3'
 
         // Automatically resolve compatible versions of the Gherkin and Cucumber plugins
         compatiblePlugin 'gherkin'
