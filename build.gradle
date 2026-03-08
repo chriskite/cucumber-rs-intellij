@@ -33,7 +33,7 @@ dependencies {
 
 intellijPlatform {
     pluginConfiguration {
-        id = 'com.chriskite.cucumber-rs.intellij'
+        id = 'com.chriskite.cucumber-rs'
         name = 'Cucumber for Rust'
         version = project.version.toString()
         description = '''

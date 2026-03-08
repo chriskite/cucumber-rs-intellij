@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>com.chriskite.cucumber-rs.intellij</id>
+    <id>com.chriskite.cucumber-rs</id>
     <name>Cucumber for Rust</name>
     <vendor url="https://github.com/chriskite/cucumber-rs-intellij">cucumber-rs</vendor>
 
